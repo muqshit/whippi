@@ -4,10 +4,10 @@
 // Firestore/Storage security rules (see firestore.rules and storage.rules), not by hiding this object.
 
 export const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
-  projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_PROJECT_ID.appspot.com',
-  messagingSenderId: 'YOUR_SENDER_ID',
-  appId: 'YOUR_APP_ID',
+  apiKey: "AIzaSyB7mZ6eJ5LYSn8RUpja9ezI72wWrHv-J04",
+  authDomain: "whippi-be1e0.firebaseapp.com",
+  projectId: "whippi-be1e0",
+  storageBucket: "whippi-be1e0.firebasestorage.app",
+  messagingSenderId: "390664358485",
+  appId: "1:390664358485:web:fa9c81965cc3efcb00e2dc"
 }
