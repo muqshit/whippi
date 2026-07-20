@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // avatars/{uid}/... - publicly readable (shown in chats to anyone), only
+    // the owner can upload into their own folder. Group icons are also
+    // stored under the uploading user's folder (see js/profile.js uploadRawImage).
+    match /avatars/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // attachments/{chatId}/... - readable/writable by any signed-in user.
+    // Storage rules can't cheaply verify Firestore chat membership without
+    // Cloud Functions, so this is scoped to "signed in" rather than "is a
+    // participant of this specific chat" - the download URL itself is
+    // effectively the access control for who you share it with, same as the
+    // public attachment bucket in the Supabase version of this app. Harden
+    // with a Cloud Function-backed check if you need per-chat enforcement.
+    match /attachments/{chatId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.resource.size < 50 * 1024 * 1024;
+    }
+  }
+}

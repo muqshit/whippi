@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#16A34A" />
+  <title>Whippi</title>
+  <meta name="description" content="Whippi — fast, private, real-time messaging." />
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+</head>
+<body>
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ===================== AUTH SCREENS ===================== -->
+  <section id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="brand-mark">💬</div>
+        <h1 id="auth-title">Welcome back to Whippi</h1>
+        <p id="auth-subtitle" class="muted">Sign in to keep chatting.</p>
+      </div>
+
+      <form id="login-form" class="auth-form">
+        <label>Username or email
+          <input type="text" id="login-identifier" required autocomplete="username" />
+        </label>
+        <label class="row-between">
+          <span>Password</span>
+          <button type="button" id="forgot-password-link" class="link-btn">Forgot password?</button>
+        </label>
+        <input type="password" id="login-password" required autocomplete="current-password" />
+        <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+      </form>
+
+      <form id="register-form" class="auth-form hidden">
+        <label>Full name<input type="text" id="register-fullname" required /></label>
+        <label>Username<input type="text" id="register-username" required placeholder="jane_doe" /></label>
+        <label>Email<input type="email" id="register-email" required /></label>
+        <label>Password<input type="password" id="register-password" required /></label>
+        <button type="submit" class="btn btn-primary btn-block">Create account</button>
+      </form>
+
+      <form id="reset-form" class="auth-form hidden">
+        <label>Email<input type="email" id="reset-email" required /></label>
+        <button type="submit" class="btn btn-primary btn-block">Send reset link</button>
+      </form>
+
+      <p class="auth-switch">
+        <span id="auth-switch-to-register">New to Whippi? <button type="button" class="link-btn" data-show="register">Create an account</button></span>
+        <span id="auth-switch-to-login" class="hidden">Already have an account? <button type="button" class="link-btn" data-show="login">Sign in</button></span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== MAIN APP ===================== -->
+  <div id="app-screen" class="app-screen hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <button id="open-profile-btn" class="avatar-btn"><img id="my-avatar" class="avatar" alt="" /></button>
+        <div class="sidebar-actions">
+          <button id="new-chat-btn" class="icon-btn" title="New chat">💬</button>
+          <button id="new-group-btn" class="icon-btn" title="New group">👥</button>
+          <div class="dropdown">
+            <button id="menu-btn" class="icon-btn" title="Menu">⋮</button>
+            <div id="menu-dropdown" class="dropdown-menu hidden">
+              <button data-action="profile">👤 Profile</button>
+              <button data-action="settings">⚙️ Settings</button>
+              <hr />
+              <button data-action="logout" class="danger">🚪 Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-search">
+        <input type="text" id="chat-search" placeholder="Search chats" />
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="chats">Chats</button>
+        <button class="tab" data-tab="groups">Groups</button>
+        <button class="tab" data-tab="contacts">Contacts</button>
+      </div>
+
+      <div id="chat-list" class="chat-list"></div>
+      <div id="contacts-panel" class="contacts-panel hidden"></div>
+    </aside>
+
+    <main id="chat-area" class="chat-area">
+      <div id="empty-state" class="empty-state">
+        <div class="empty-icon">💬</div>
+        <h2>Whippi Web</h2>
+        <p class="muted">Select a chat to start messaging.</p>
+      </div>
+
+      <div id="active-chat" class="active-chat hidden">
+        <div class="chat-header">
+          <button id="back-btn" class="icon-btn mobile-only">←</button>
+          <button id="chat-header-info" class="chat-header-info">
+            <img id="chat-avatar" class="avatar" alt="" />
+            <div class="chat-header-text">
+              <p id="chat-title" class="chat-title"></p>
+              <p id="chat-subtitle" class="chat-subtitle muted"></p>
+            </div>
+          </button>
+          <div class="chat-header-actions">
+            <button class="icon-btn" title="Voice call (not available in this build)">📞</button>
+            <button class="icon-btn" title="Video call (not available in this build)">🎥</button>
+            <button id="chat-search-btn" class="icon-btn" title="Search in chat">🔍</button>
+            <div class="dropdown">
+              <button id="chat-menu-btn" class="icon-btn">⋮</button>
+              <div id="chat-menu-dropdown" class="dropdown-menu hidden">
+                <button data-action="pin">📌 Pin/Unpin chat</button>
+                <button data-action="mute">🔕 Mute/Unmute</button>
+                <button data-action="archive">🗄️ Archive/Unarchive</button>
+                <hr />
+                <button data-action="leave-delete" class="danger">🗑️ Leave / Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="chat-search-bar" class="chat-search-bar hidden">
+          <input type="text" id="chat-search-input" placeholder="Search in this chat…" />
+          <div id="chat-search-results" class="chat-search-results"></div>
+        </div>
+
+        <div id="message-list" class="message-list"></div>
+        <div id="upload-progress" class="upload-progress hidden"><div id="upload-progress-bar"></div></div>
+
+        <div id="reply-preview" class="reply-preview hidden">
+          <div class="reply-preview-text">
+            <p id="reply-preview-label" class="reply-preview-label"></p>
+            <p id="reply-preview-content" class="muted"></p>
+          </div>
+          <button id="reply-cancel-btn" class="icon-btn">✕</button>
+        </div>
+
+        <form id="message-form" class="message-input">
+          <div class="dropdown">
+            <button type="button" id="emoji-btn" class="icon-btn">😊</button>
+            <div id="emoji-picker" class="emoji-picker hidden"></div>
+          </div>
+          <div class="dropdown">
+            <button type="button" id="attach-btn" class="icon-btn">📎</button>
+            <div id="attach-dropdown" class="dropdown-menu hidden">
+              <button type="button" data-accept="image/*,video/*">🖼️ Photo or video</button>
+              <button type="button" data-accept=".pdf,.zip,.doc,.docx,.xls,.xlsx,.txt,.csv">📄 Document</button>
+            </div>
+          </div>
+          <input type="file" id="file-input" class="hidden" />
+          <textarea id="message-text" placeholder="Type a message" rows="1"></textarea>
+          <button type="submit" id="send-btn" class="icon-btn send-btn">➤</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===================== MODAL HOST ===================== -->
+  <div id="modal-root"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
